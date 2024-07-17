@@ -1,37 +1,25 @@
-var xhr = new XMLHttpRequest();
-var url =
-  'http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst'; /*URL*/
-var queryParams =
-  '?' + encodeURIComponent('serviceKey') + '=' + '서비스키'; /*Service Key*/
-queryParams +=
-  '&' + encodeURIComponent('pageNo') + '=' + encodeURIComponent('1'); /**/
-queryParams +=
-  '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('1000'); /**/
-queryParams +=
-  '&' + encodeURIComponent('dataType') + '=' + encodeURIComponent('XML'); /**/
-queryParams +=
-  '&' +
-  encodeURIComponent('base_date') +
-  '=' +
-  encodeURIComponent('20210628'); /**/
-queryParams +=
-  '&' + encodeURIComponent('base_time') + '=' + encodeURIComponent('0600'); /**/
-queryParams +=
-  '&' + encodeURIComponent('nx') + '=' + encodeURIComponent('55'); /**/
-queryParams +=
-  '&' + encodeURIComponent('ny') + '=' + encodeURIComponent('127'); /**/
-xhr.open('GET', url + queryParams);
-xhr.onreadystatechange = function () {
-  if (this.readyState == 4) {
-    alert(
-      'Status: ' +
-        this.status +
-        'nHeaders: ' +
-        JSON.stringify(this.getAllResponseHeaders()) +
-        'nBody: ' +
-        this.responseText
-    );
-  }
-};
+const SERVICE_KEY =
+  '%2BUjyuVkbInMr7Tkmumw5Lb87wtQ1ndK3qPSUaX7TRXySfHboo8MS5A%2BLHgjHzfD5K0BAYcDcu1wIQv2t1HQxGw%3D%3D';
 
-xhr.send('');
+function getFormattedDate() {
+  const offset = 1000 * 60 * 60 * 9;
+  const today = new Date(new Date().getTime() + offset);
+  const ISOString = today.toISOString();
+  const formattedDate = ISOString.split('T')[0].split('-').join('');
+
+  return formattedDate;
+}
+
+async function getWeatherData() {
+  const url =
+    'https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst'; /*URL*/
+
+  const reqUrl = `${url}?serviceKey=${SERVICE_KEY}&pageNo=1&numOfRows=1000&dataType=JSON&base_date=${getFormattedDate}&base_time=0500&nx=55&ny=127`;
+
+  const response = await fetch(reqUrl);
+  const result = await response;
+
+  return result;
+}
+
+export { getWeatherData };
