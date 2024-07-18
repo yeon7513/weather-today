@@ -1,10 +1,18 @@
+import { useEffect, useState } from 'react';
 import { getWeatherData } from './api/getWeathers';
 import './App.css';
 
 function App() {
-  const datas = getWeatherData();
+  const [data, setData] = useState([]);
 
-  console.log(datas);
+  const handleLoad = async () => {
+    const result = await getWeatherData();
+    setData(result);
+  };
+
+  useEffect(() => {
+    handleLoad();
+  }, []);
 
   return (
     <div className="App">
